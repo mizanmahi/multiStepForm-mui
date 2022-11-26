@@ -1,25 +1,39 @@
-import logo from './logo.svg';
+import { Box, ThemeProvider, CssBaseline } from '@mui/material';
 import './App.css';
+import Form from './components/Form/Form';
+import theme from './theme/theme';
+import Lottie from 'lottie-react';
+import registerLottie from './assets/register.json';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+   return (
+      <ThemeProvider theme={theme}>
+         <CssBaseline />
+         <Box
+            sx={{
+               bgcolor: 'primary.lightBg',
+               width: '100vw',
+               height: '100vh',
+               display: 'flex',
+               justifyContent: 'center',
+            }}
+         >
+            <Box sx={{
+               display: 'flex',
+               flexDirection: 'column',
+               alignItems: 'center',
+            }}>
+               <Lottie
+                  animationData={registerLottie}
+                  style={{
+                     width: '300px',
+                  }}
+               />
+               <Form />
+            </Box>
+         </Box>
+      </ThemeProvider>
+   );
 }
 
 export default App;
