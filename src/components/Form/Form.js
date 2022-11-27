@@ -1,4 +1,11 @@
-import { Box, styled, Typography, Button, InputAdornment } from '@mui/material';
+import {
+   Box,
+   styled,
+   Typography,
+   Button,
+   InputAdornment,
+   Link,
+} from '@mui/material';
 import React from 'react';
 import CustomStepper from '../CustomStepper/CustomStepper';
 import CustomTextField from '../CustomTextField/CustomTextField';
@@ -6,6 +13,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 import EmailIcon from '@mui/icons-material/Email';
 import CallIcon from '@mui/icons-material/Call';
+import { useForm } from 'react-hook-form';
 
 const PrimaryButton = styled(Button)(({ theme }) => ({
    background: theme.palette.primary.main,
@@ -20,14 +28,15 @@ const Wrapper = styled(Box)(({ theme }) => ({
    borderRadius: theme.spacing(1),
    width: '100%',
    maxWidth: '400px',
-   padding: theme.spacing(2),
+   padding: theme.spacing(3),
 }));
 
 export const Ul = styled('ul')(({ theme }) => ({
    listStyle: 'none',
    padding: 0,
-   width: '100%',
-   minWidth: '368px',
+   width: '350px',
+   maxWidth: '100%',
+
    '& li': {
       display: 'flex',
       alignItems: 'center',
@@ -55,6 +64,28 @@ export const Ul = styled('ul')(({ theme }) => ({
 const Form = () => {
    // const theme = useTheme();
    const [activeStep, setActiveStep] = React.useState(0);
+   const {
+      register,
+      handleSubmit,
+      formState: { errors },
+   } = useForm();
+
+   const submitHandler = (userData) => {
+      console.log(userData);
+
+      if (activeStep === 0) {
+         setActiveStep(1);
+         return;
+      }
+      if (activeStep === 1) {
+         setActiveStep(2);
+         return;
+      }
+
+      // send to backend
+      console.log('Sending to backend');
+   };
+   console.log(errors)
 
    const fields = [
       <>
@@ -72,6 +103,14 @@ const Form = () => {
             sx={{
                mb: 2,
             }}
+            {...register('fullName', {
+               required: {
+                  value: true,
+                  message: 'Full name is required',
+               },
+            })}
+            error={errors?.fullName}
+            helperText={errors.fullName && errors.fullName.message}
          />
          <CustomTextField
             placeholder='Password'
@@ -84,6 +123,18 @@ const Form = () => {
                ),
             }}
             fullWidth
+            {...register('password', {
+               required: {
+                  value: true,
+                  message: 'Please input a password',
+               },
+               minLength: {
+                  value: 8,
+                  message: 'Password must be at least 8 characters long',
+               },
+            })}
+            error={errors.password}
+            helperText={errors.password ? errors.password.message : ''}
          />
       </>,
       <>
@@ -101,6 +152,18 @@ const Form = () => {
             sx={{
                mb: 2,
             }}
+            {...register('email', {
+               required: {
+                  value: true,
+                  message: 'Email is Required',
+               },
+               pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: 'Invalid email address',
+               },
+            })}
+            error={errors?.email}
+            helperText={errors.email && errors.email.message}
          />
          <CustomTextField
             placeholder='Phone'
@@ -113,6 +176,22 @@ const Form = () => {
                ),
             }}
             fullWidth
+            {...register('phone', {
+               required: {
+                  value: true,
+                  message: 'Please input a number',
+               },
+               minLength: {
+                  value: 11,
+                  message: 'Number must be at least 11 characters long',
+               },
+               maxLength: {
+                  value: 11,
+                  message: 'Number must be at most 11 characters long',
+               },
+            })}
+            error={errors.phone}
+            helperText={errors.phone && errors.phone.message}
          />
       </>,
       <>
@@ -123,18 +202,33 @@ const Form = () => {
                </Typography>
                <Typography variant='h6'>Mizanur Rahman</Typography>
             </li>
+            <li>
+               <Typography variant='body' component='p'>
+                  <EmailIcon sx={{ mr: 1 }} /> Email
+               </Typography>
+               <Typography variant='h6'>mizanmhai24@gmail.com</Typography>
+            </li>
+            <li>
+               <Typography variant='body' component='p'>
+                  <CallIcon sx={{ mr: 1 }} /> Phone
+               </Typography>
+               <Typography variant='h6'>01620705755</Typography>
+            </li>
          </Ul>
       </>,
    ];
 
+   console.log(activeStep);
+
    return (
       <Wrapper>
          <Typography
-            variant='h6'
+            variant='h5'
             sx={{
                color: '#ffffff',
                textAlign: 'center',
-               mb: 2,
+               mb: 3,
+               fontWeight: 300,
             }}
          >
             Create account in 3 simple step!
@@ -145,6 +239,8 @@ const Form = () => {
             sx={{
                mt: 4,
             }}
+            component='form'
+            onSubmit={handleSubmit(submitHandler)}
          >
             {fields[activeStep]}
 
@@ -164,13 +260,23 @@ const Form = () => {
                </PrimaryButton>
                <PrimaryButton
                   variant='contained'
-                  onClick={() => setActiveStep(activeStep + 1)}
-                  disabled={activeStep === 3}
+                  disabled={activeStep >= 3}
+                  type='submit'
                >
-                  {activeStep === 2 ? 'Submit' : 'Next'}
+                  {activeStep >= 2 ? 'Submit' : 'Next'}
                </PrimaryButton>
             </Box>
          </Box>
+         <Typography
+            sx={{
+               fontWeight: 300,
+               fontSize: '14px',
+               textAlign: 'center',
+               mt: 4,
+            }}
+         >
+            Already have an account? <Link>Login</Link>
+         </Typography>
       </Wrapper>
    );
 };

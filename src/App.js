@@ -2,8 +2,6 @@ import { Box, ThemeProvider, CssBaseline } from '@mui/material';
 import './App.css';
 import Form from './components/Form/Form';
 import theme from './theme/theme';
-import Lottie from 'lottie-react';
-import registerLottie from './assets/register.json';
 
 function App() {
    return (
@@ -16,21 +14,10 @@ function App() {
                height: '100vh',
                display: 'flex',
                justifyContent: 'center',
+               alignItems: 'center',
             }}
          >
-            <Box sx={{
-               display: 'flex',
-               flexDirection: 'column',
-               alignItems: 'center',
-            }}>
-               <Lottie
-                  animationData={registerLottie}
-                  style={{
-                     width: '300px',
-                  }}
-               />
-               <Form />
-            </Box>
+            <Form />
          </Box>
       </ThemeProvider>
    );
